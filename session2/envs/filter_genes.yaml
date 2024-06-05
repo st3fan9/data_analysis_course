@@ -1,0 +1,8 @@
+channels:
+    - conda-forge
+    - bioconda
+    - defaults
+dependencies:
+    - python            = 3.8.10
+    - scanpy            = 1.9.6
+    - pandas            = 1.1.3

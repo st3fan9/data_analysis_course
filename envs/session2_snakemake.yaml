@@ -1,0 +1,11 @@
+name: session2_snakemake
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - snakemake         = 8.12
+  - graphviz
+  - ca-certificates
+  - certifi
+  - openssl

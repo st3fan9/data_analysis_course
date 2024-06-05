@@ -1,0 +1,17 @@
+name: session2_scanpy
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - pandas[version='<2.0']
+  - scanpy
+  - ca-certificates
+  - openssl
+  - matplotlib[version='<3.7']
+  - certifi
+  - openpyxl
+  - ipykernel
+  - scipy
+  - scvelo
+  - leidenalg

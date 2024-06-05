@@ -1,0 +1,41 @@
+samples = ["rd10", "wt"]
+
+rule results:
+    input:
+        # Edit the target rule to include the output of filter_genes
+        expand("filter_cells/{sample}_fc.h5ad", sample=samples),
+
+rule filter_cells:
+    input:
+        anndata_object = "input_data/{sample}.h5ad",
+    output:
+        anndata_object_fc = "filter_cells/{sample}_fc.h5ad",
+        qc_violin_plot = "filter_cells/figures/{sample}_qc_violin_plot.png",
+        # Add a scatterplot to the outputs to visualize the relationship between the number of genes and transcripts
+    params:
+        # Add a parameter that lets you determine the minimum number of genes you find acceptable
+    conda:
+        "envs/filter_cells.yaml",
+    shell:
+        "python scripts/filter_cells.py \
+                --input_file {input.anndata_object} \
+                --output_file {output.anndata_object_fc} \
+                --qc_violin_plot {output.qc_violin_plot}"
+                # Complete the shell command to include the scatterplot path you added above
+                # Complete the shell command to include the parameter you added above
+                # Pay attention to the line breaks in the shell command
+                # You can use the \ character to break the command into multiple lines
+                # End the command with a closing quotation mark
+
+rule filter_genes:
+    input:
+        anndata_object_fc = "filter_cells/{sample}_fc.h5ad",
+    output:
+        anndata_object_fc_fg = "filter_cells_genes/{sample}_fc_fg.h5ad",
+    conda:
+        "envs/filter_genes.yaml",
+    shell:
+        "python scripts/filter_genes.py \
+                --input_file {input.anndata_object_fc} \
+                --output_file {output.anndata_object_fc_fg}"
+
