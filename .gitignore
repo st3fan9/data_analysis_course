@@ -1,0 +1,10 @@
+session3/data/*
+data
+input_data
+ag
+*.tar
+*.gz
+*.h5ad
+
+session2/.snakemake
+

@@ -3,7 +3,7 @@ samples = ["rd10", "wt"]
 rule results:
     input:
         # Edit the target rule to include the output of filter_genes
-        expand("filter_cells/{sample}_fc.h5ad", sample=samples),
+        expand("filter_cells_genes/{sample}_fc_fg.h5ad", sample=samples),
 
 rule filter_cells:
     input:
@@ -11,8 +11,10 @@ rule filter_cells:
     output:
         anndata_object_fc = "filter_cells/{sample}_fc.h5ad",
         qc_violin_plot = "filter_cells/figures/{sample}_qc_violin_plot.png",
+        qc_scatterplot = 'filter_cells/figures/{sample}_qc_scatterplot.png',
         # Add a scatterplot to the outputs to visualize the relationship between the number of genes and transcripts
     params:
+        min_n_genes = 200,
         # Add a parameter that lets you determine the minimum number of genes you find acceptable
     conda:
         "envs/filter_cells.yaml",
@@ -20,7 +22,9 @@ rule filter_cells:
         "python scripts/filter_cells.py \
                 --input_file {input.anndata_object} \
                 --output_file {output.anndata_object_fc} \
-                --qc_violin_plot {output.qc_violin_plot}"
+                --qc_violin_plot {output.qc_violin_plot} \
+                --min_n_genes {params.min_n_genes} \
+                --qc_scatterplot {output.qc_scatterplot}"
                 # Complete the shell command to include the scatterplot path you added above
                 # Complete the shell command to include the parameter you added above
                 # Pay attention to the line breaks in the shell command

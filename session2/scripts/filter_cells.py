@@ -13,6 +13,8 @@ parser = argparse.ArgumentParser(description='Filter cells based on QC metrics')
 parser.add_argument("--input_file", type=Path, required=True, help="Input file")
 parser.add_argument("--output_file", type=Path, required=True, help="Output file with good-quality cells")
 parser.add_argument("--qc_violin_plot", type=Path, help="Path to save violin plot of QC metrics")
+parser.add_argument('--min_n_genes', type=int, help='Parameter of minimum number of genes')
+parser.add_argument("--qc_scatterplot", type=Path, help="Path to save scatterplot of QC metrics")
 # TODO: Add the scatterplot path from snakemake rule so python can use it while executing the script
 # TODO: Add the parameter from snakemake so python can use it while executing the script
 
@@ -43,9 +45,9 @@ adata.obs["n_genes"] = (adata.X > 0).sum(axis=1).A1
 
 # TODO: Edit the min_n_genes so that it uses your snakemake parameter instead of a hardcoded value
 # TODO: Edit the fraction_mito threshold so it filters everything above mean + 2*sd
-min_n_genes = 200
+min_n_genes = args.min_n_genes
 min_n_counts = 1000
-max_fraction_mito = 0.05
+max_fraction_mito = adata.obs["fraction_mito"].mean() + 2*adata.obs["fraction_mito"].std()
 
 # # # Filtering
 
@@ -81,4 +83,7 @@ plt.savefig(args.qc_violin_plot)
 
 # TODO: Add scatterplot with seaborn and save to location specified in snakemake rule
 # NOTE: Add the thresholds as horizontal and vertical lines to the plot
+fig = plt.figure()
+sns.scatterplot(x=adata.obs["n_genes"], y=adata.obs["n_counts"])
+plt.savefig(args.qc_scatterplot)
 
